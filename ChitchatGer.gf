@@ -1,4 +1,4 @@
-concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef in {
+concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude in {
 
 	lincat Sentence = Text;
 	lin SayQuestion question = mkText question questMarkPunct;
@@ -47,6 +47,19 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef in {
 	lin CResideCity person city = {
 		pos = mkCl (mkNP person) (mkVP (mkVP wohnen_V) (SyntaxGer.mkAdv in_Prep city));
 		neg = mkS presentTense negativePol (mkCl (mkNP person) (mkVP (mkVP wohnen_V) (SyntaxGer.mkAdv in_Prep city)))
+	};
+
+	oper kommen_V : V = mkV "kommen";
+	oper woher_IAdv = ss "woher" ;
+	oper aus_Prep = mkPrep "aus" dative;
+	lin QOriginate person = mkUtt (mkQS (mkQCl woher_IAdv (mkCl (mkNP person) kommen_V)));
+	lin COriginateCountry person country = {
+		pos = mkCl (mkNP person) (mkVP (mkVP kommen_V) (SyntaxGer.mkAdv aus_Prep country));
+		neg = mkS presentTense negativePol (mkCl (mkNP person) (mkVP (mkVP kommen_V) (SyntaxGer.mkAdv aus_Prep country)))
+	};
+	lin COriginateCity person city = {
+		pos = mkCl (mkNP person) (mkVP (mkVP kommen_V) (SyntaxGer.mkAdv aus_Prep city));
+		neg = mkS presentTense negativePol (mkCl (mkNP person) (mkVP (mkVP kommen_V) (SyntaxGer.mkAdv aus_Prep city)))
 	};
 
 	------

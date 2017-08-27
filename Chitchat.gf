@@ -22,9 +22,9 @@ abstract Chitchat = {
 
 	cat Person;
 	fun P1f, P1m : Person;
-	--fun P2tf, P2tm : Person;
-	--fun P2vf, P2vm : Person;
-	--fun P3f, P3m : Person;
+	fun P2tf, P2tm : Person;
+	fun P2vf, P2vm : Person;
+	fun P3f, P3m : Person;
 
 	cat Country;
 	fun Ireland, CzechRepublic, Latvia : Country;
@@ -35,6 +35,10 @@ abstract Chitchat = {
 	fun QReside : Person -> Question;														--where does [person] live?
 	fun CResideCountry : Person -> Country -> Clause;						--[somebody] lives in [country]
 	fun CResideCity : Person -> City -> Clause;									--[somebody] lives in [city]
+
+	fun QOriginate : Person -> Question;														--where does [person] come from?
+	fun COriginateCountry : Person -> Country -> Clause;						--[somebody] comes from [country]
+	fun COriginateCity : Person -> City -> Clause;									--[somebody] comes from [city]
 
 	------
 

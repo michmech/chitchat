@@ -43,6 +43,11 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef in {
 	lin CResideCountry person country = mkCl (mkNP person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep country));
 	lin CResideCity person city = mkCl (mkNP person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep city));
 
+	oper come_V : V = mkV "come" "comes";
+	lin QOriginate person = mkUtt (mkQS (mkQCl where_IAdv (mkCl (mkNP person) (mkVP (mkVP come_V) (ParadigmsEng.mkAdv "from"))  )));
+	lin COriginateCountry person country = mkCl (mkNP person) (mkVP (mkVP come_V) (SyntaxEng.mkAdv from_Prep country));
+	lin COriginateCity person city = mkCl (mkNP person) (mkVP (mkVP come_V) (SyntaxEng.mkAdv from_Prep city));
+
 	------
 
 	lincat Settlement = CN;
