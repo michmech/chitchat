@@ -83,20 +83,26 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef in {
 
 	------
 
-	lincat LifeStruggle = CN;
-	lin PhD = mkCN (mkN "PhD");
-	lin Marriage = mkCN (mkN "marriage");
-	lin Project = mkCN (mkN "project");
+	lincat Name = PN;
+	lin AName = mkPN "#name";
 
-	lincat Goodness = A;
-	lin Good = mkA "good" "better" "best" "well";
-	lin Bad = mkA "bad";
-
-	lin QLifeStruggle person struggle = mkUtt (mkQS (mkQCl how_IAdv (mkCl (mkNP person struggle) (progressiveVP (mkVP (mkV "go"))))));
-	lin CLifeStruggle person struggle goodness = mkCl (mkNP person struggle) (progressiveVP (mkVP (mkVP (mkV "go")) (SyntaxEng.mkAdv goodness)));
+	lin QName person = mkUtt (mkQCl what_IP (mkNP person (mkN "name")));
+	lin CName person name = mkCl (mkNP person (mkN "name")) (mkNP name);
 
 	------
 
-	
+	lincat GreetableTime = {defaultToHello : PBool; cn: CN};
+	lin Day = {defaultToHello = PTrue; cn = variants{}};
+	lin Morning = {defaultToHello = PFalse; cn = mkCN (mkN "morning")};
+	lin Afternoon = {defaultToHello = PFalse; cn = mkCN (mkN "afternoon")};
+	lin Evening = {defaultToHello = PFalse; cn = mkCN (mkN "evening")};
+
+	lin SHello = lin Text {s = "hello ."};
+	lin SGreeting part = case part.defaultToHello of {
+		PTrue => lin Text {s = "hello ."};
+		PFalse => mkText (mkUtt (mkCN (mkAP (mkA "good")) part.cn))
+	};
+
+	------
 
 }

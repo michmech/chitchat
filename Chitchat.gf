@@ -63,18 +63,24 @@ abstract Chitchat = {
 
 	------
 
-	cat LifeStruggle;
-	fun PhD, Marriage, Project : LifeStruggle;
+	cat Name;
+	fun AName : Name;																						--placeholder for a name, linearize as "#name"
 
-	cat Goodness;
-	fun Good, Bad : Goodness;
-
-	fun QLifeStruggle : Person -> LifeStruggle -> Question;				  				--how is [person]'s [PhD/marriage/...] is going?
-	fun CLifeStruggle : Person -> LifeStruggle -> Goodness -> Clause;				--[person]'s [PhD/marriage/...] is going [well/badly]
+	fun QName : Person -> Question; 														--what is [person]'s name?
+	fun CName : Person -> Name -> Clause;											  --[person]'s name is [...]
 
 	------
 
-	
+	cat GreetableTime;
+	fun Day, Morning, Afternoon, Evening : GreetableTime;
+
+	fun SGreeting : GreetableTime -> Sentence;									--good [morning/afternoon/...] (or default to hello)
+	fun SHello : Sentence;																			--hello
+
+	------
+
+
+
 
 
 
