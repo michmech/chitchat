@@ -5,9 +5,9 @@ abstract Chitchat = {
 	fun SayQuestion : Question -> Sentence;				--is something the case?
 	fun SayStatement : Statement -> Sentence;			--something is the case
 	fun SayDenial : Denial -> Sentence;						--something is not the case
-	fun SayYesStatement : Statement -> Sentence;	--yes, something is the case
-	fun SayNoDenial : Denial -> Sentence;					--no, something is not the case
-	fun SayNoStatement : Statement -> Sentence;		--no, something is the case
+	--fun SayYesStatement : Statement -> Sentence;	--yes, something is the case
+	--fun SayNoDenial : Denial -> Sentence;					--no, something is not the case
+	--fun SayNoStatement : Statement -> Sentence;		--no, something is the case
 
 	cat Question;										--is something the case?
 	cat Statement;									--something is the case
@@ -17,6 +17,10 @@ abstract Chitchat = {
 	fun Deny : Clause -> Denial;
 
 	cat Clause;											--something is/isn't/is? the case
+
+	------
+
+	fun SHello : Sentence;																			--hello
 
 	------
 
@@ -64,24 +68,9 @@ abstract Chitchat = {
 	------
 
 	cat Name;
-	fun AName : Name;																						--placeholder for a name, linearize as "#name"
+	fun AName : Name;																						--placeholder for a name, linearize as "..."
 
 	fun QName : Person -> Question; 														--what is [person]'s name?
 	fun CName : Person -> Name -> Clause;											  --[person]'s name is [...]
-
-	------
-
-	cat GreetableTime;
-	fun Day, Morning, Afternoon, Evening : GreetableTime;
-
-	fun SGreeting : GreetableTime -> Sentence;									--good [morning/afternoon/...] (or default to hello)
-	fun SHello : Sentence;																			--hello
-
-	------
-
-
-
-
-
 
 }

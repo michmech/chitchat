@@ -19,6 +19,10 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef in {
 
 	------
 
+	lin SHello = lin Text {s = "hello ."};
+
+	------
+
 	lincat Person = Pron;
 	lin P1f, P1m = i_Pron;
 	lin P2tf, P2tm = youSg_Pron;
@@ -84,25 +88,9 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef in {
 	------
 
 	lincat Name = PN;
-	lin AName = mkPN "#name";
+	lin AName = mkPN "...";
 
 	lin QName person = mkUtt (mkQCl what_IP (mkNP person (mkN "name")));
 	lin CName person name = mkCl (mkNP person (mkN "name")) (mkNP name);
-
-	------
-
-	lincat GreetableTime = {defaultToHello : PBool; cn: CN};
-	lin Day = {defaultToHello = PTrue; cn = variants{}};
-	lin Morning = {defaultToHello = PFalse; cn = mkCN (mkN "morning")};
-	lin Afternoon = {defaultToHello = PFalse; cn = mkCN (mkN "afternoon")};
-	lin Evening = {defaultToHello = PFalse; cn = mkCN (mkN "evening")};
-
-	lin SHello = lin Text {s = "hello ."};
-	lin SGreeting part = case part.defaultToHello of {
-		PTrue => lin Text {s = "hello ."};
-		PFalse => mkText (mkUtt (mkCN (mkAP (mkA "good")) part.cn))
-	};
-
-	------
 
 }
