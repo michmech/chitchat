@@ -19,10 +19,6 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef in {
 
 	------
 
-	lin SHello = lin Text {s = "hello ."};
-
-	------
-
 	lincat Person = Pron;
 	lin P1f, P1m = i_Pron;
 	lin P2tf, P2tm = youSg_Pron;
@@ -78,7 +74,6 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef in {
 	lincat JobStatus = VP;
 	lin Student = mkVP (mkNP a_Det (mkN "student"));
 	lin Unemployed = mkVP (mkAP (mkA "unemployed"));
-	lin Employed = mkVP (mkAP (mkA "employed"));
 	lin SelfEmployed = mkVP (mkAP (mkA "self-employed"));
 	lin Retired = mkVP (mkAP (mkA "retired"));
 

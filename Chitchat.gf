@@ -5,9 +5,9 @@ abstract Chitchat = {
 	fun SayQuestion : Question -> Sentence;				--is something the case?
 	fun SayStatement : Statement -> Sentence;			--something is the case
 	fun SayDenial : Denial -> Sentence;						--something is not the case
-	--fun SayYesStatement : Statement -> Sentence;	--yes, something is the case
-	--fun SayNoDenial : Denial -> Sentence;					--no, something is not the case
-	--fun SayNoStatement : Statement -> Sentence;		--no, something is the case
+	fun SayYesStatement : Statement -> Sentence;	--yes, something is the case
+	fun SayNoDenial : Denial -> Sentence;					--no, something is not the case
+	fun SayNoStatement : Statement -> Sentence;		--no, something is the case
 
 	cat Question;										--is something the case?
 	cat Statement;									--something is the case
@@ -20,12 +20,11 @@ abstract Chitchat = {
 
 	------
 
-	fun SHello : Sentence;																			--hello
-
-	------
-
 	cat Person;
-	fun P1f, P1m, P2tf, P2tm, P2vf, P2vm, P3f, P3m : Person;
+	fun P1f, P1m : Person;
+	--fun P2tf, P2tm : Person;
+	--fun P2vf, P2vm : Person;
+	--fun P3f, P3m : Person;
 
 	cat Country;
 	fun Ireland, CzechRepublic, Latvia : Country;
@@ -60,7 +59,7 @@ abstract Chitchat = {
 	------
 
 	cat JobStatus;
-	fun Student, Unemployed, Employed, SelfEmployed, Retired : JobStatus;
+	fun Student, Unemployed, SelfEmployed, Retired : JobStatus;
 
 	fun CHaveJob : Person -> Clause;														--[person] has a job
 	fun CJobStatus : Person -> JobStatus -> Clause;							--[person] is [employed/unemployed/...]

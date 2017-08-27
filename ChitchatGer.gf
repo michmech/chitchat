@@ -19,10 +19,6 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef in {
 
 	------
 
-	lin SHello = lin Text {s = "hallo ."};
-
-	------
-
 	lincat Person = Pron;
 	lin P1f, P1m = i_Pron;
 	lin P2tf, P2tm = youSg_Pron;
@@ -96,7 +92,6 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef in {
 	lincat JobStatus = VP;
 	lin Student = mkVP (mkNP (mkN "Student"));
 	lin Unemployed = mkVP (mkAP (mkA "arbeitslos"));
-	lin Employed = mkVP (mkAP (mkA "befustätig"));
 	lin SelfEmployed = mkVP (mkAP (mkA "selbstständig"));
 	lin Retired = mkVP (ParadigmsGer.mkAdv "im Ruhestand");
 
