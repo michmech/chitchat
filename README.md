@@ -1,4 +1,4 @@
-# Chitchat.gif
+# Chitchat.gf
 
 This is work in progress, come back later (but do come back soon).
 
