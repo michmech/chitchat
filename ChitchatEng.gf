@@ -17,9 +17,39 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef, Prelude
 
 	lincat Clause = Cl;
 
-	------
+	-----------
+	--Templates
+	-----------
 
-	oper person_Quant : NP -> Quant; --me > my, mother -> mother's (why doesn't the RGL have this?)
+	oper live_V : V = mkV "live" "lives";
+	oper come_V : V = mkV "come" "comes";
+
+	lin QReside person = mkUtt (mkQS (mkQCl where_IAdv (mkCl (person) live_V)));
+	lin CResideCountry person country = mkCl (person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep country));
+	lin CResideCity person city = mkCl (person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep city));
+
+	lin QOriginate person = mkUtt (mkQS (mkQCl where_IAdv (mkCl (person) (mkVP (mkVP come_V) (ParadigmsEng.mkAdv "from"))  )));
+	lin COriginateCountry person country = mkCl (person) (mkVP (mkVP come_V) (SyntaxEng.mkAdv from_Prep country));
+	lin COriginateCity person city = mkCl (person) (mkVP (mkVP come_V) (SyntaxEng.mkAdv from_Prep city));
+
+	lin CSettlement person settlement = mkCl (person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep (mkNP a_Det settlement)));
+	lin CSettlementCountry person settlement country = mkCl (person) (mkVP (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep (mkNP a_Det settlement))) (SyntaxEng.mkAdv in_Prep country));
+
+	lin CHaveGBFriend person gbfriendCN = mkCl (person) (mkVP have_V2 (mkNP a_Det gbfriendCN));
+	lin CMaritalStatus person status = mkCl (person) status;
+	lin QMaritalStatus person = mkUtt (mkQS (mkCl (person) (mkAP or_Conj (mkAP (mkA "married")) (mkAP (mkA "single")))));
+
+	lin CHaveJob person = mkCl (person) (mkVP have_V2 (mkNP a_Det (mkN "job")));
+	lin CJobStatus person status = mkCl (person) status;
+
+	lin QName person = mkUtt (mkQCl what_IP (mkNP (person_Quant person) (mkCN (mkN "name"))));
+	lin CName person name = mkCl (mkNP (person_Quant person) (mkCN (mkN "name"))) (mkNP name);
+
+	----------
+	--Entities
+	----------
+
+	oper person_Quant : NP -> Quant; --me -> my, mother -> mother's (why doesn't the RGL have this?)
 	oper person_Quant np = lin Quant {s = \\_,_ => np.s!(ResEng.NCase ResEng.Gen); sp = \\_,_,_ => np.s!(ResEng.NCase ResEng.Gen)};
 
 	lincat Person = NP;
@@ -41,29 +71,10 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef, Prelude
 	lin Brno = mkNP (mkPN "Brno");
 	lin Riga = mkNP (mkPN "Riga");
 
-	------
-
-	oper live_V : V = mkV "live" "lives";
-	lin QReside person = mkUtt (mkQS (mkQCl where_IAdv (mkCl (person) live_V)));
-	lin CResideCountry person country = mkCl (person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep country));
-	lin CResideCity person city = mkCl (person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep city));
-
-	oper come_V : V = mkV "come" "comes";
-	lin QOriginate person = mkUtt (mkQS (mkQCl where_IAdv (mkCl (person) (mkVP (mkVP come_V) (ParadigmsEng.mkAdv "from"))  )));
-	lin COriginateCountry person country = mkCl (person) (mkVP (mkVP come_V) (SyntaxEng.mkAdv from_Prep country));
-	lin COriginateCity person city = mkCl (person) (mkVP (mkVP come_V) (SyntaxEng.mkAdv from_Prep city));
-
-	------
-
 	lincat Settlement = CN;
 	lin BigCity = mkCN (mkA "big") (mkN "city");
 	lin SmallTown = mkCN (mkA "small") (mkN "town");
 	lin Village = mkCN (mkN "village");
-
-	lin CSettlement person settlement = mkCl (person) (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep (mkNP a_Det settlement)));
-	lin CSettlementCountry person settlement country = mkCl (person) (mkVP (mkVP (mkVP live_V) (SyntaxEng.mkAdv in_Prep (mkNP a_Det settlement))) (SyntaxEng.mkAdv in_Prep country));
-
-	------
 
 	lincat GBFriend = CN;
 	lin Girlfriend = mkCN (mkN "girlfriend");
@@ -75,27 +86,13 @@ concrete ChitchatEng of Chitchat = open SyntaxEng, ParadigmsEng, Predef, Prelude
 	lin Divorced = mkAP (mkA "divorced");
 	lin Widowed = mkAP (mkA "widowed");
 
-	lin CHaveGBFriend person gbfriendCN = mkCl (person) (mkVP have_V2 (mkNP a_Det gbfriendCN));
-	lin CMaritalStatus person status = mkCl (person) status;
-	lin QMaritalStatus person = mkUtt (mkQS (mkCl (person) (mkAP or_Conj (mkAP (mkA "married")) (mkAP (mkA "single")))));
-
-	------
-
 	lincat JobStatus = VP;
 	lin Student = mkVP (mkNP a_Det (mkN "student"));
 	lin Unemployed = mkVP (mkAP (mkA "unemployed"));
 	lin SelfEmployed = mkVP (mkAP (mkA "self-employed"));
 	lin Retired = mkVP (mkAP (mkA "retired"));
 
-	lin CHaveJob person = mkCl (person) (mkVP have_V2 (mkNP a_Det (mkN "job")));
-	lin CJobStatus person status = mkCl (person) status;
-
-	------
-
 	lincat Name = PN;
 	lin AName = mkPN "...";
-
-	lin QName person = mkUtt (mkQCl what_IP (mkNP (person_Quant person) (mkCN (mkN "name"))));
-	lin CName person name = mkCl (mkNP (person_Quant person) (mkCN (mkN "name"))) (mkNP name);
 
 }
