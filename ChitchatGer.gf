@@ -7,10 +7,12 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
   lin SayNoStatement statement = mkText no (mkText statement fullStopPunct);
   lin SayDenial denial = mkText denial fullStopPunct;
   lin SayNoDenial denial = mkText no (mkText denial fullStopPunct);
+  lin SayNoDenialBut denial restr = mkText (mkText denial) (mkText (but restr) fullStopPunct);
   oper yes : Text = lin Text {s = "ja ,"};
   oper no : Text = lin Text {s = "nein ,"};
+  oper but : Utt -> Utt = \ utt -> lin Utt {s = "aber" ++ utt.s};
 
-  lincat Question, Statement, Denial = Utt;
+  lincat Question, Statement, Denial, Restriction = Utt;
   lin Ask clause = mkUtt (mkQS presentTense (mkQCl clause.pos));
   lin State clause = mkUtt (mkS presentTense clause.pos);
   lin Deny clause = mkUtt clause.neg;
@@ -25,6 +27,7 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
   oper kommen_V : V = mkV "kommen";
   oper woher_IAdv = lin IAdv (ss "woher") ;
   oper aus_Prep = mkPrep "aus" dative;
+  oper approve_VP : VP = mkVP (mkAP (mkA "einverstanden"));
 
   lin QReside person = mkUtt (mkQS (mkQCl where_IAdv (mkCl person.np wohnen_V)));
   lin CResideCountry person country = {
@@ -79,6 +82,10 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
     pos = mkCl person.np (mkVP (mkV2 "heißen") (mkNP AName));
     neg = mkS presentTense positivePol (mkCl person.np (mkVP (mkV2 "heißen") (mkNP not_Predet (mkNP AName))))
   };
+
+  lin DontGetFunnyIdeas = lin Utt { s = "komm nicht auf dumme Gedanken" };
+  lin NotApproving person = mkUtt (mkS negativePol (mkCl person.np approve_VP));
+  lin NeverthelessHappy = mkUtt (mkS (mkCl i_NP (mkVP (mkAP (invarA "trotzdem glücklich")))));
 
   ----------
   --Entities
