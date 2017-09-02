@@ -26,19 +26,6 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
   oper woher_IAdv = lin IAdv (ss "woher") ;
   oper aus_Prep = mkPrep "aus" dative;
 
-  oper mkCCC : P -> CC -> Cl : \person,complement = {
-    pos = case complement.shape of {
-      AsAP => mkCl person.np complement.ap; --ich bin verheiratet
-      AsCN => mkCl person.np (mkNP (complement.cn!person.ng)); --ich bin Witwe/Witwer
-      AsAdv => mkCl person.np complement.adv --ich bin im Ruhestand
-    };
-    neg = case complement.shape of{
-      AsAP => mkS presentTense negativePol (mkCl person.np complement.ap); --ich bin nicht verheiratet
-      AsCN => mkS presentTense (mkCl person.np (mkNP no_Quant (complement.cn!person.ng))); --ich bin keine Witwe/kein Witwer
-      AsAdv => mkS presentTense negativePol (mkCl person.np complement.adv) --ich bin nicht im Ruhestand
-    }
-  };
-
   lin QReside person = mkUtt (mkQS (mkQCl where_IAdv (mkCl person.np wohnen_V)));
   lin CResideCountry person country = {
     pos = mkCl person.np (mkVP (mkVP wohnen_V) (SyntaxGer.mkAdv in_Prep country));
@@ -72,14 +59,20 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
     pos = mkCl person.np (mkVP have_V2 (mkNP a_Det gbfriendCN));
     neg = mkS (mkCl person.np (mkVP have_V2 (mkNP no_Quant gbfriendCN)));
   };
-  lin CMaritalStatus person status = mkCCC person status;;
+  lin CMaritalStatus person status = {
+    pos = mkCl person.np (mkVP (status.pos!person.ng));
+    neg = mkS (mkCl person.np (mkVP (status.neg!person.ng)));
+  };
   lin QMaritalStatus person = mkUtt (mkQS (mkCl person.np (mkAP or_Conj (mkAP (mkA "verheiratet")) (mkAP (mkA "ledig")))));
 
   lin CHaveJob person = {
     pos = mkCl person.np (mkVP have_V2 (mkNP a_Det (mkN "Job" masculine)));
     neg = mkS (mkCl person.np (mkVP have_V2 (mkNP no_Quant (mkN "Job" masculine))))
   };
-  lin CJobStatus person status = mkCCC person status;
+  lin CJobStatus person status = {
+    pos = mkCl person.np (mkVP (status.pos!person.ng));
+    neg = mkS (mkCl person.np (mkVP (status.neg!person.ng)));
+  };
 
   lin QName person = mkUtt (mkQCl how_IAdv (mkCl person.np (mkVP (mkV "heißen"))));
   lin CName person name = {
@@ -91,15 +84,17 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
   --Entities
   ----------
 
-  param NG = Masc | Fem; --natural gender, for agreement with complements like "Studen/Studentin", "Witwe/Witwer"
+  param NG = Masc | Fem; --natural gender, for agreement with copular complements like "Student/Studentin", "Witwe/Witwer"
   oper P : Type = {isPron : PBool; pron : Pron; np : NP; ng : NG}; --people which can be either Pron+NP, or NP only (with dummy Pron)
 
-  param Shape = AsAP | AsCN | AsAdv;
-  oper CC : Type = {shape : Shape; ap: AP; cn: NG => CN; adv : Adv}; --copular complements which can be either an AP (eg. "verheiratet") or a gender-dependent CN (eg. "Student/Studentin") or an Adv ("im Ruhestand"):
-  oper mkCCfromAP : AP -> CC = \ap -> {shape = AsAP; ap = ap; cn = \\_=>mkCN (mkN ""); adv = ParadigmsGer.mkAdv ""};
-  oper mkCCfromCN : CN -> CC = \cn -> {shape = AsCN; ap = mkAP (mkA ""); cn = \\_=>cn; adv = ParadigmsGer.mkAdv ""};
-  oper mkCCfromCN2 : CN -> CN -> CC = \cnmasc,cnfem -> {shape = AsCN; ap = mkAP (mkA ""); cn = table{Masc => cnmasc; Fem => cnfem}; adv = ParadigmsGer.mkAdv ""};
-  oper mkCCfromAdv : Adv -> CC = \adv -> {shape = AsAdv; ap = mkAP (mkA ""); cn = \\_=>mkCN (mkN ""); adv = adv};
+  oper CCAdv : Type = {pos: NG => Adv; neg : NG => Adv}; --copular complement adverb
+  oper mkCCadv = overload {
+    mkCCadv : Str -> Str -> CCAdv = \pos,neg -> {pos = \\_ => ParadigmsGer.mkAdv pos; neg = \\_ => ParadigmsGer.mkAdv neg};
+    mkCCadv : Str -> Str -> Str -> Str -> CCAdv = \posm,posf,negm,negf -> {
+      pos = table {Masc => ParadigmsGer.mkAdv posm; Fem => ParadigmsGer.mkAdv posf};
+      neg = table {Masc => ParadigmsGer.mkAdv negm; Fem => ParadigmsGer.mkAdv negf}
+    };
+  };
 
   lincat Person = P;
   lin P1m = {isPron = PTrue; pron = i_Pron; np = mkNP i_Pron; ng = Masc};
@@ -138,19 +133,18 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
   lin Girlfriend = mkCN (mkN "Freundin" feminine);
   lin Boyfriend = mkCN (mkN "Freund" masculine);
 
-  lincat MaritalStatus = CC;
-  lin Single = mkCCfromAP (mkAP (mkA "ledig"));
-  lin Married = mkCCfromAP (mkAP (mkA "verheiratet"));
-  lin Divorced = mkCCfromAP (mkAP (mkA "geschieden"));
-  lin Widowed = mkCCfromCN2 (mkCN (mkN "Witwer" masculine)) (mkCN (mkN "Witwe" feminine));
+  lincat MaritalStatus = CCAdv;
+  lin Single = mkCCadv "ledig" "nicht ledig";
+  lin Married = mkCCadv "verheiratet" "nicht verheiratet";
+  lin Divorced = mkCCadv "geschieden" "nicht geschieden";
+  lin Widowed = mkCCadv "Witwer" "Witwe" "kein Witwer" "keine Witwe";
 
-  lincat JobStatus = CC;
-  lin Student = mkCCfromCN2 (mkCN (mkN "Student" masculine)) (mkCN (mkN "Studentin" feminine));
-  lin Unemployed = mkCCfromAP (mkAP (mkA "arbeitslos"));
-  lin SelfEmployed = mkCCfromAP (mkAP (mkA "selbtständig"));
-  lin Retired = mkCCfromAdv (ParadigmsGer.mkAdv "im Ruhestand");
+  lincat JobStatus = CCAdv;
+  lin Student = mkCCadv "Student" "Studentin" "kein Student" "keine Studentin";
+  lin Unemployed = mkCCadv "arbeitslos" "nicht arbeitslos";
+  lin SelfEmployed = mkCCadv "selbtständig" "nicht selbtsständig";
+  lin Retired = mkCCadv "im Ruhestand" "nicht im Ruhestand";
 
   lincat Name = PN;
   lin AName = mkPN "...";
-
 }
