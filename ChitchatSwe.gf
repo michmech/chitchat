@@ -44,7 +44,7 @@ concrete ChitchatSwe of Chitchat = open SyntaxSwe, ParadigmsSwe, ExtraSwe, Prede
   lin CHaveJob person = mkCl (person) (mkVP have_V2 (mkNP a_Det (mkN "arbete")));
   lin CJobStatus person status = mkCl (person) status;
 
-  lin QName person = mkUtt (mkQCl what_IP (mkClSlash person (mkVPSlash heta_V2)));
+  lin QName person = mkUtt (mkQCl what_IP person heta_V2);
   lin CName person name = mkCl (person) heta_V2 (mkNP name);
 
   ----------
