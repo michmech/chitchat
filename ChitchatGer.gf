@@ -142,7 +142,7 @@ concrete ChitchatGer of Chitchat = open SyntaxGer, ParadigmsGer, Predef, Prelude
   lincat JobStatus = CCAdv;
   lin Student = mkCCadv "Student" "Studentin" "kein Student" "keine Studentin";
   lin Unemployed = mkCCadv "arbeitslos" "nicht arbeitslos";
-  lin SelfEmployed = mkCCadv "selbtständig" "nicht selbtsständig";
+  lin SelfEmployed = mkCCadv "selbstständig" "nicht selbstständig";
   lin Retired = mkCCadv "im Ruhestand" "nicht im Ruhestand";
 
   lincat Name = PN;
